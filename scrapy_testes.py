@@ -2,9 +2,9 @@ import psycopg2
 import pandas as pd
 data = pd.read_csv (r'ml_more/ml_more/data.csv',sep=',')   
 df = pd.DataFrame(data)
-print("OK")
 def execute_sql():
-    conn = psycopg2.connect(host='localhost', port='5432',database='postgres',user='postgres', password='postgres')
+    print("Executando query")
+    conn = psycopg2.connect(host='35.198.18.5', port='5432',database='postgres',user='postgres', password='postgres')
     cursor = conn.cursor()
     cursor.execute('''
             CREATE TABLE IF NOT EXISTS  ml_more (

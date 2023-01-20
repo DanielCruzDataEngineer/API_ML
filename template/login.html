@@ -6,10 +6,10 @@
         <div class="col-md-6 mx-auto">
             <div class="card card-body">
                 <h1 class="text-center mb-3">
-                    <i class="fas fa-sign-in-alt"></i> Login
+                    <i class="fas fa-sign-in-alt"></i> Zorro API LOGIN
                 </h1>
                 <form action="{{ url_for('login') }}" method="post">
-                    <img src="{{ url_for('static', filename='images/zorro.png') }}" alt="Zorro">
+                    <img src="{{ url_for('static', filename='images/zorro.png') }}" alt="Logo">
                     
                     <div class="form-group">
                     <label for="username">Username</label>
@@ -19,8 +19,18 @@
                     <label for="password">Password</label>
                     <input type="password" name="password" class="form-control" placeholder="Enter your password">
                     </div>
+                    <script>
+                      function login() {
+                        // código de validação de login
+                        // ...
+                        document.getElementById("alert-bar").classList.add("alert-success");
+                        alert("Bem vindo a Zorro API");
+                      }
+                    </script> 
                     <div class="form-group">
-                    <input type="submit" value="Login" class="btn btn-primary btn-block"onclick="alert('Bem vindo a API Zorro, aqui você encontrará um back de qualidade')">Login>
+                    <div id="alert-bar" class="alert">
+                    <input type="submit" value="Login" class="btn btn-primary btn-block"onclick="login()"class='alert-success'>
+                    </div>  
                     </div>
                     </form>
                     </div>

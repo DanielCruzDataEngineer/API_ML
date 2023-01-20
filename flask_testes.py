@@ -8,10 +8,20 @@ from scrapy_testes import execute_sql
 from valid_auth import valid_login
 from autenti_oficial import login_required
 import csv
+from speedtest import Speedtest
+print("Flask")
 app = Flask(__name__,template_folder='template',static_folder='static')
+print("Flask")
 app.secret_key = 'the random string'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@35.198.18.5:5432/postgres'
+print("Ok")
 db = SQLAlchemy(app)
+@app.route('/speed')
+def speed():
+    st = Speedtest()
+    download_speed = st.download()
+    upload_speed = st.upload()
+    return (f"Download speed: {download_speed} Mbps and Upload speed: {upload_speed} Mb")
 
 @app.route('/')
 @login_required
@@ -23,7 +33,10 @@ def home():
 def index():
     return render_template("search.html")
 @app.route("/search", methods=['GET', 'POST'])
+@login_required
+
 def search():
+
     query = session.get('search', None)
     print(query)
 
@@ -33,9 +46,35 @@ def search():
     # Fazer a pesquisa
     os.environ["VAR1"] = search_term
     count = db.session.execute("""SELECT count(*) from ml_more;""").fetchall()
+    count = str(count).replace("[","")
+    count = str(count).replace("]","")
+    count = str(count).replace(",","")
+    def execute_query():
+        # Criar a consulta usando o SQLAlchemy
+
+        results = db.session.execute("""SELECT * from ml_more;""").fetchall()
+        
+        # Escrever os resultados em um arquivo CSV
+        csv_file = 'results.csv'
+        with open(csv_file, mode='w',encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(["price", "title","link"])
+            for result in results:
+                writer.writerow([result.price, result.title,result.link])
+        # Retornar o arquivo CSV como um arquivo anexo
+        return send_file(csv_file,
+                    mimetype='text/csv',
+                    as_attachment=True,
+                    download_name = f"{search_term}.csv"
+                    )
+
+        
+    
     os.system("./ml_more.sh")
+    execute_sql()
     results = search_term
-    return render_template('results.html', results=results,count=count)
+    execute_query()
+    return render_template('results.html', results=results,count=count) and execute_query() 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -63,6 +102,7 @@ def execute_insert():
 @app.route('/execute_query', methods=['POST','GET'])
 @login_required
 def execute_query():
+    user_ip = request.remote_addr
     # Criar a consulta usando o SQLAlchemy
 
     results = db.session.execute("""SELECT * from ml_more;""").fetchall()
@@ -81,10 +121,7 @@ def execute_query():
                  )
 
     
-@app.route('/logout')
-def logout():
-    session.pop('username', None)
-    return redirect(url_for('login'))
+
     
 @app.route('/api_v1', methods=['GET'])
 def get_users():
