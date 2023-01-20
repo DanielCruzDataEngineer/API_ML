@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-body">
+                <h1 class="text-center mb-3">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </h1>
+                <form action="{{ url_for('login') }}" method="post">
+                    <img src="{{ url_for('static', filename='images/zorro.png') }}" alt="Zorro">
+                    
+                    <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password">
+                    </div>
+                    <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary btn-block"onclick="alert('Bem vindo a API Zorro, aqui você encontrará um back de qualidade')">Login>
+                    </div>
+                    </form>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    {% endblock %}
+                    ```
